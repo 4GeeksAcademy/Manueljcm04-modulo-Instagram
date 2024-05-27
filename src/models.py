@@ -1,7 +1,7 @@
 import os
 import sys
 from sqlalchemy import Column, Integer, String, Enum
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import declarative_base, relationship
 from eralchemy2 import render_er
 
 Base = declarative_base()
@@ -31,19 +31,13 @@ class Post(Base):
     __tablename__ = 'post'
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer)
+    comment = relationship(Comment, backref='post')
+    media = relationship(Media, backref='post')
 
 class Follower(Base):
     __tablename__ = 'follower'
     user_from_id = Column(Integer, primary_key=True)
     user_to_id = Column(Integer, primary_key=True)
+    user = relationship(User, backref='follower')
 
-def to_dict(self):
-    return {}
-
-## Draw from SQLAlchemy base
-try:
-    result = render_er(Base, 'diagram.png')
-    print("Success! Check the diagram.png file")
-except Exception as e:
-    print("There was a problem generating the diagram")
-    raise e
+render_er(Base, 'diagram.png')
